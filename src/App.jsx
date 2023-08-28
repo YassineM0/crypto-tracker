@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import Coin from "./components/Coin";
 
 const App = () => {
+  const rows = [];
+  const itemsPerRow = 3;
   const [coinArray, setCoinArray] = useState([]);
   const [search, setSearch] = useState("");
   useEffect(() => {
@@ -24,6 +26,10 @@ const App = () => {
   const searchedCoins = coinArray.filter((coin) =>
     coin.name.toLowerCase().includes(search.toLowerCase())
   );
+  for (let i = 0; i < searchedCoins.length; i += itemsPerRow) {
+    rows.push(searchedCoins.slice(i, i + itemsPerRow));
+  }
+  console.log(rows);
   return (
     <div className="coinApp">
       <div className="inp">
@@ -35,17 +41,24 @@ const App = () => {
           />
         </form>
       </div>
-      {searchedCoins.map((coin) => {
-        return (
-          <Coin
-            name={coin.id}
-            image={coin.image}
-            price={coin.currentprice}
-            mkCap={coin.market_cap}
-            priceChange={coin.price_change_percentage_24h}
-          />
-        );
-      })}
+      <div className="coinRows">
+        {rows.map((row, index) => (
+          <div key={index}>
+            {row.map((coin) => (
+              <div key={coin.id}>
+                <Coin
+                  name={coin.id}
+                  image={coin.image}
+                  price={coin.currentprice}
+                  mkCap={coin.market_cap}
+                  priceChange={coin.price_change_percentage_24h}
+                />
+              </div>
+            ))}
+            ;
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
